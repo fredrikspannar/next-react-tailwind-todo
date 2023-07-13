@@ -1,3 +1,5 @@
+import { setCompletedTodo } from "../../../services/todo-service";
+
 
 // api handler for toggling an todo as completed ( or not as completed )
 export default async function handler(req, res) {
@@ -5,22 +7,14 @@ export default async function handler(req, res) {
 
     // note: for a more best-practice RESTful API this should be a PATCH and not a POST
 
-    // send to backend
-    const response = await fetch(`${process.env.BACKEND}/todo/completed`, {
-        method: 'post',
-        headers: [
-          ["Content-Type", "application/json"]
-        ],
-        body: JSON.stringify( {id: id, completed: completed} )
-      });
-
-    const json = await response.json();
+    // use service to mark or unmark as completed
+    const result = setCompletedTodo(id, completed);
 
     // successful?
-    if ( response.status == 200 ) {
-        res.status(200).json(json);
+    if ( result && typeof result === "object" && result.title ) {
+      res.status(200).json({"todo":result});
     } else {
-        console.error('/api/todo failed to update todo in backend. Response = ',response);
+        console.error('/api/todo failed to update todo in backend. Result = ',result);
         res.status(500).json({"message": "Failed to update todo."});
     }
 

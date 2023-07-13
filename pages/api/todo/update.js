@@ -1,3 +1,4 @@
+import { updateTodo } from "../../../services/todo-service";
 
 // api handler for updateing the title of a todo
 export default async function handler(req, res) {
@@ -5,22 +6,13 @@ export default async function handler(req, res) {
 
     // note: for a more best-practice RESTful API this should be a PUT/PATCH and not a POST
 
-    // send to backend
-    const response = await fetch(`${process.env.BACKEND}/todo/update`, {
-        method: 'post',
-        headers: [
-          ["Content-Type", "application/json"]
-        ],
-        body: JSON.stringify( {id: id, title: title} )
-      });
-
-    const json = await response.json();
+    const result = updateTodo(id, title);
 
     // successful?
-    if ( response.status == 200 ) {
-        res.status(200).json(json);
+    if ( result && typeof result === "object" && result.title ) {
+      res.status(200).json({"todo":result});
     } else {
-        console.error('/api/todo failed to update todo in backend. Response = ',response);
+        console.error('/api/todo failed to update todo in backend. Result = ',result);
         res.status(500).json({"message": "Failed to update todo."});
     }
 

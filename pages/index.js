@@ -5,47 +5,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSquareCheck } from '@fortawesome/free-solid-svg-icons';
 import { faSquare } from '@fortawesome/free-regular-svg-icons';
 import PuffLoader from "react-spinners/PuffLoader";
+import { getAllTodos } from "../services/todo-service";
 
 // get all todos on load when server is rendering the page
 export const getServerSideProps = async() => {
   let error = "";
-  let todos = [];
+  let todos = getAllTodos();
   
-  // configuration not set?
-  if ( !process.env.BACKEND ) {
-    return {
-      props: {
-        todos: [],
-        error: "Critical error! Configuration has not been set!"
-      }
-    }
-  }
-
-  // fetch from backend
-  try {
-    const response = await fetch(`${process.env.BACKEND}/todo`);
-    const json = await response.json();
-
-    if ( response.status == 200 ) {
-      // if successful fetch, save list of todos
-      todos = json;
-    
-    } else if (json.message) {
-      // forward error
-      error = json.message;
-
-    } else {
-      // fallback
-      error = "Failed to fetch todos";
-    }
-
-  } catch(e) {
-    // failed to get from backen, output error to console and a formatted message to frontend
-    console.error('Failed fetching from API. Error: ',e);
-    error = "Failed to fetch todos";
-  }
-
-
   return {
     props: {
       todos: todos,
@@ -78,7 +44,7 @@ export default function Home({todos,error}) {
     setIsLoading(true);
 
     // send to frontend-api which forwards to the real backend
-    const response = await fetch(`/api/todo/create`,{
+    const response = await fetch("/api/todo/create",{
       method: 'post',
       headers: [
         ["Content-Type", "application/json"]
@@ -109,7 +75,7 @@ export default function Home({todos,error}) {
     setIsLoading(true);
 
     // send to frontend-api which forwards to the real backend
-    const response = await fetch(`/api/todo/completed`,{
+    const response = await fetch("/api/todo/completed",{
       method: 'post',
       headers: [
         ["Content-Type", "application/json"]
@@ -160,7 +126,7 @@ export default function Home({todos,error}) {
     setIsLoading(true);
 
     // send to frontend-api which forwards to the real backend
-    const response = await fetch(`/api/todo/update`,{
+    const response = await fetch("/api/todo/update",{
       method: 'post',
       headers: [
         ["Content-Type", "application/json"]
