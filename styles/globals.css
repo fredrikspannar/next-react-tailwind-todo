@@ -1,0 +1,27 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {    
+    body {
+        @apply bg-zinc-50;
+    }
+
+    nav, main {
+        @apply bg-orange-200 border-orange-600 border-4 rounded-xl p-6 mt-6 w-full md:w-3/4 mx-auto;
+    }
+
+    .min-w-72 {
+        min-width: 18rem;
+      }
+
+      .z-99 { z-index: 90; }
+
+    .message {
+        @apply p-4 border-0 border-l-8 border-solid z-99 min-w-72 min-w-max fixed top-1 right-1 font-bold shadow-xl;
+    }   
+
+    .todo-row {
+        @apply  px-4 py-2 mt-6;
+    }
+}
