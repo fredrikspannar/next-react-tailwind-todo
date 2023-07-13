@@ -10,7 +10,7 @@ import { getAllTodos } from "../services/todo-service";
 // get all todos on load when server is rendering the page
 export const getServerSideProps = async() => {
   let error = "";
-  let todos = getAllTodos();
+  let todos = await getAllTodos();
   
   return {
     props: {

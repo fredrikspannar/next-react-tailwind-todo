@@ -1,61 +1,78 @@
 
-// in-memory storage
-let todoList = [];
+import { PrismaClient } from '@prisma/client'
+const prisma = new PrismaClient()
 
-export function setCompletedTodo(id, isCompleted) {
-    let updatedItem = null;
+export async function setCompletedTodo(id, isCompleted) {
+    try {
+        const completed = Number.isInteger(isCompleted) ? Boolean(isCompleted) : isCompleted;
 
-    const newList = todoList.map( (item) => {
-        // match id
-        if ( item.id !== id ) {
-            // return other todo
-            return item;
-        } else {
-            // matched todo, update completed
-            updatedItem = { ...item, isCompleted: isCompleted};
-            return updatedItem;
-        }
-    });
+        // save to db
+        const todo = await prisma.todo.update({
+            where: { id: id },
+            data: {
+                isCompleted: completed
+            }
+        });
 
-    // update in-memory storage with updated list
-    todoList = newList;
+        // return created todo
+        return todo;
 
-    // return updated item
-    return updatedItem;
+    } catch(e) {
+        console.error('Failed to update Todo in database. Error: ',e);
+        return e;
+    }
 }
 
-export function createTodo(title) {
-    // setup object to store and push to memory
-    const newTodo = { title: title, isCompleted: 0, id: todoList.length+1};
-    todoList.push(newTodo);
+export async function createTodo(title) {
 
-    // return created todo
-    return newTodo;
+    try {
+        // save to db
+        const todo = await prisma.todo.create({
+            data: {
+                title: title,
+                isCompleted: false
+            }
+        });
+
+        // return created todo
+        return todo;
+
+    } catch(e) {
+        console.error('Failed to save Todo to database. Error: ',e);
+        return e;
+    }
 }
 
-export function updateTodo(id, title) {
-    let updatedItem = null;
+export async function updateTodo(id, title) {
+    try {
+        // save to db
+        const todo = await prisma.todo.update({
+            where: { id: id },
+            data: {
+                title: title
+            }
+        });
 
-    const newList = todoList.map( (item) => {
-        // match id
-        if ( item.id !== id ) {
-            // return other todo
-            return item;
-        } else {
-            // matched todo, update title and completed
-            updatedItem = { ...item, title: title};
-            return updatedItem;
-        }
-    });
+        // return created todo
+        return todo;
 
-    // update in-memory storage with updated list
-    todoList = newList;
-
-    // return updated item
-    return updatedItem;
+    } catch(e) {
+        console.error('Failed to update Todo in database. Error: ',e);
+        return e;
+    }
 }
 
-export function getAllTodos() {
-    // return all todos stored
-    return todoList;
+export async function getAllTodos() {
+    
+    try {
+        // return all todos stored    
+        const todos = await prisma.todo.findMany();
+
+        // return list
+        return todos;
+
+    } catch(e) {
+        console.error('Failed to get Todos from database. Error: ',e);
+        return e;
+    }
 }

@@ -4,7 +4,7 @@ import { createTodo } from "../../../services/todo-service";
 export default async function handler(req, res) {
     const { title } = req.body;
 
-    const result = createTodo(title);
+    const result = await createTodo(title);
 
     // successful?
     if ( result && typeof result === "object" && result.title ) {

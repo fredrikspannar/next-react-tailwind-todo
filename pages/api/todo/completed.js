@@ -8,7 +8,7 @@ export default async function handler(req, res) {
     // note: for a more best-practice RESTful API this should be a PATCH and not a POST
 
     // use service to mark or unmark as completed
-    const result = setCompletedTodo(id, completed);
+    const result = await setCompletedTodo(id, completed);
 
     // successful?
     if ( result && typeof result === "object" && result.title ) {

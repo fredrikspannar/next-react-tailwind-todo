@@ -6,7 +6,7 @@ export default async function handler(req, res) {
 
     // note: for a more best-practice RESTful API this should be a PUT/PATCH and not a POST
 
-    const result = updateTodo(id, title);
+    const result = await updateTodo(id, title);
 
     // successful?
     if ( result && typeof result === "object" && result.title ) {
