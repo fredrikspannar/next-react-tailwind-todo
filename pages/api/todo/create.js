@@ -10,7 +10,7 @@ export default async function handler(req, res) {
     if ( result && typeof result === "object" && result.title ) {
         res.status(200).json({"todo":result});
     } else {
-        console.error('/api/todo failed to save new todo in backend. Result = ',result);
+        console.error('/api/todo failed to save new todo. Result = ',result);
         res.status(500).json({"message": "Failed to save new todo."});
     }
 

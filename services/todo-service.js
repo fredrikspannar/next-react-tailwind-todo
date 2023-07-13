@@ -66,13 +66,32 @@ export async function getAllTodos() {
     
     try {
         // return all todos stored    
-        const todos = await prisma.todo.findMany();
+        const todos = await prisma.todo.findMany({where: { isTrashed: false}});
 
         // return list
         return todos;
 
     } catch(e) {
         console.error('Failed to get Todos from database. Error: ',e);
+        return e;
+    }
+}
+
+export async function trashTodo(id) {
+    try {
+        // mark todo as trashed db
+        const todo = await prisma.todo.update({
+            where: { id: id },
+            data: {
+                isTrashed: true
+            }
+        });
+
+        // return created todo
+        return todo;
+
+    } catch(e) {
+        console.error('Failed to mark Todo as trashed in database. Error: ',e);
         return e;
     }
 }

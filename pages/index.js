@@ -152,6 +152,41 @@ export default function Home({todos,error}) {
   }
 
 
+  const handleDelete = async (e, item) => {
+    e.preventDefault();
+
+    if ( confirm(`Are you sure you want to trash "${item.title}"?`) ) {
+
+      setIsLoading(true);
+
+      // send to frontend-api which forwards to the real backend
+      const response = await fetch("/api/todo/trash",{
+        method: 'post',
+        headers: [
+          ["Content-Type", "application/json"]
+        ],
+        body: JSON.stringify( {id: item.id } )
+      });
+  
+      const json = await response.json();
+  
+      if ( response.status == 200 ) {
+        setSuccessMessage("Todo was trashed");
+  
+        setEditTodoTitle("");
+  
+      } else {
+        setErrorMessage("Failed to trash todo");
+      }
+      
+      setIsEditing(false);
+      setIsLoading(false);
+  
+      router.replace("/"); // reloads page and list with all
+
+    }
+  }
+
   // render page
   return (
     <>
@@ -187,12 +222,16 @@ export default function Home({todos,error}) {
                 </div>
                 <div className="flex w-1/4 justify-end">
                   {/* Action-button to start editing */}
-                  {!isEditingId && <button onClick={(e) => handleSetEditing(e, item)} className="bg-zinc-200 hover:bg-zinc-400 py-2 px-6 rounded-lg">Edit</button>}
+                  {!isEditingId && <>
+                      <button onClick={(e) => handleSetEditing(e, item)} className="bg-zinc-600 hover:bg-zinc-800 py-2 px-6 rounded-lg mr-2 text-white">Edit</button>
+                      <button onClick={(e) => handleDelete(e, item)} className="bg-red-500 hover:bg-red-800 py-2 px-6 rounded-lg text-white">Delete</button>
+                    </>
+                  }
 
                   {/* Action-buttons when editing */}
                   { (isEditingId && isEditingId == item.id) && <>
-                      <button onClick={handleSaveUpdatedTodo} className="bg-zinc-200 hover:bg-zinc-400 py-2 px-6 rounded-lg">Save</button>
-                      <button onClick={(e) => handleSetEditing(e, false)} className="bg-zinc-200 hover:bg-zinc-400 py-2 px-6 rounded-lg ml-2">Cancel</button>
+                      <button onClick={handleSaveUpdatedTodo} className="bg-green-600 hover:bg-green-800 py-2 px-6 rounded-lg text-white">Save</button>
+                      <button onClick={(e) => handleSetEditing(e, false)} className="bg-zinc-600 hover:bg-zinc-800 py-2 px-6 rounded-lg ml-2 text-white">Cancel</button>
                     </>
                   }
                 </div>
@@ -201,9 +240,9 @@ export default function Home({todos,error}) {
           
           {/* Add new todo ( only when not editing ) */}
           {!isEditingId && (
-            <div className={`todo-row flex justify-end mb-4 ${!isLoading ? "border-b-2 border-blue-600" : ""}`}>
+            <div className={`todo-row flex justify-end mt-12 mb-4 ${!isLoading ? "border-b-2 border-blue-600" : ""}`}>
                 <input type="text" disabled={isLoading} onChange={handleSetNewTodoTitle} className={`py-2 px-6 mr-2 ${!isLoading ? "bg-zinc-50" : "bg-zinc-300"} rounded-lg w-full`} placeholder="Write new title here..." value={newTodoTitle} />
-                {!isLoading && <button onClick={handleSaveNewTodo} className="bg-zinc-200 hover:bg-zinc-400 py-2 px-6 rounded-lg">Save</button>}
+                {!isLoading && <button onClick={handleSaveNewTodo} className="bg-green-600 hover:bg-green-800 py-2 px-6 rounded-lg text-white">Save</button>}
             </div>
           )}
 
