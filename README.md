@@ -41,5 +41,21 @@ Here you should set username and password to what you have setup in the docker i
 Open a terminal in the project root and run:
 
 ```
-npx prisma migrate dev --name init
+npx prisma migrate dev
 ```
+
+In production you should run this command for migrations:
+
+```
+npx prisma migrate deploy
+```
+
+### Production
+
+For NextJS Auth to work in a production-enviroment, make sure to set an enviroment variable for a secret:
+
+```
+NEXTAUTH_SECRET=[your_top_secret]
+```
+
+( or.. if you don't you will get an error while trying to login )
