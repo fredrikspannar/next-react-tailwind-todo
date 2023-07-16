@@ -1,12 +1,11 @@
 import { signIn } from 'next-auth/react';
-import { useSearchParams } from "next/navigation";
+
 
 export default function signin() {
-    const searchParams = useSearchParams();
-    const callbackUrl = searchParams.get("callbackUrl") || "/";
+
 
     const handleGoogleLogin = () => {
-        signIn('google',  { callbackUrl } );
+        signIn('google' );
     }
 
     return (
