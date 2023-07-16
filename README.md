@@ -1,5 +1,21 @@
 ## next-react-tailwind-todo
 
+### Authentication
+
+This app uses Next-Auth with Google provider to authenticate a user and make a todolist personal. Login to
+[Google Cloud Console](https://console.cloud.google.com/), create a new project and setup credientials like this ( when running in local dev ):
+
+<img src="docs/create-oauth-client-id.png" title="Google Oauth credientials setup">
+
+Next, setup the envoriment variables for the Google Oauth Client ID and Client Secret. Create or add to the .env-file:
+
+```
+GOOGLE_OAUTH_ID=[XXXXXXXXXX]
+GOOGLE_OAUTH_SECRET=[YYYYYYYYYY]
+```
+
+( replace [XXXXXXXXXX] and [YYYYYYYYYY] from credientals-page in Google API's )
+
 ### Persistent storage
 
 Persistent storage is done with Postgresql. Local dev-enviroment could be run with a docker image.
